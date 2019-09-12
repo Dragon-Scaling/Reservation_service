@@ -12,6 +12,7 @@
     "start": "nodemon ./server/index.js",
     "DB": "mysql -u root -p < database/Schema.sql",
     "seed": "node ./database/seed.js",
+    "seedElastic": "node ./database/seedElastic.js",
     "test": "jest ./client/src/test"
   },
   "dependencies": {
