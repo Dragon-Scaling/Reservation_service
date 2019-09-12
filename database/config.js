@@ -1,5 +1,5 @@
 module.exports = {
-  host: "172.17.0.3 ",
+  host: "localhost", //172.17.0.3
   user: 'root',
   password: 'password',
   database: 'reservationsModule'

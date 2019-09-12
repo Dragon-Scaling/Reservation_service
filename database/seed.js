@@ -19,7 +19,7 @@ var inputListing = function () {
 }
 //function for generating reservations listing
 var reservationsListing = function () {
-  for (let i = 1; i <= 100; i++) {
+  for (let i = 1; i <= 10; i++) {
     var reserve = seed.generateReservations(i)
     for (let j = 0; j < reserve.length; j++) {
 
