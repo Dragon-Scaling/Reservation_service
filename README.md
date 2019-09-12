@@ -15,9 +15,22 @@
 1. [Requirements](#requirements)
 1. [Development](#development)
 
-## Usage
+## EndPoints
 
-> Some usage instructions
+## create a new room record
+> app.post('/api/rooms/')
+
+## get listing data by room ID
+> app.get('/api/listingData/:id')
+
+## get reservations data according to listing ID
+> app.get('/api/reservations/:listingId')
+
+## update existing data by room ID
+> app.put('/api/rooms/:id')
+
+## delete a record
+> app.delete('/api/rooms/:id')
 
 ## Requirements
 

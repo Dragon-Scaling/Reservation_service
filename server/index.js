@@ -56,7 +56,7 @@ app.post('/api/rooms/', (req, res) =>{
         }
      }
  }, function(err, resp, status) {
-     console.log(resp);
+    res.send(status);
  })
 })
 //
@@ -67,8 +67,7 @@ app.get('/api/listingData/:id', (req, res) => {
       "index" : 'rooms',
       "id" : id
   }).then(function(resp) {
-      console.log(resp.body);
-      res.send(resp.body);
+      res.send(resp.body._source.listing);
   }, function(err) {
       console.log(err.message);
   });
@@ -77,23 +76,45 @@ app.get('/api/listingData/:id', (req, res) => {
 //get reservations data according to listing ID
 app.get('/api/reservations/:listingId', (req, res) => {
   let listingId = req.params.listingId;
-  client.search({
+  client.get({
       "index" : 'rooms',
-      "id" : id
+      "id" : listingId
   }).then(function(resp) {
       console.log(resp.body);
-      res.send(resp.body);
+      res.send(resp.body._source.reservedDates);
   }, function(err) {
-      console.trace(err.message);
+      console.log(err.message);
   });
 })
 //
-//update existing data
-app.post('/api/rooms/:id', (req,res) =>{
+//update existing data by room ID
+app.put('/api/rooms/:id', (req,res) =>{
   let id = req.params.id;
-
+  client.update({
+    "id" : id,
+    "index" : "rooms",
+    "body" : {
+          "cost" : 4
+    }
+  }).then(function(resp,) {
+    console.log(resp);
+  }, function(err) {
+    console.log(err.message);
+  })
 })
 //
+//delete a record
+app.delete('/api/rooms/:id', (req, res) => {
+  let id = req.params.id;
+  client.delete({
+    "id": id,
+    "index" : 'rooms',
+  }).then(function(err, resp, status) {
+    res.send(status);
+  }, function(err, resp,) {
+    console.log(err.message);
+  });
+})
 //
 ////////////////////////////////////////////////////////////
 
