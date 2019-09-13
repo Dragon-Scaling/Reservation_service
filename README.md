@@ -17,20 +17,20 @@
 
 ## EndPoints
 
-## create a new room record
-> app.post('/api/rooms/')
+## create a new reservation for listing
+> post('/api/listing/:id')
 
-## get listing data by room ID
-> app.get('/api/listingData/:id')
+## get a listings by ID
+> get('/api/listing/:id')
 
-## get reservations data according to listing ID
-> app.get('/api/reservations/:listingId')
+## get a listings reservations by ID
+> get('/api/listing/:id/reservations')
 
 ## update existing data by room ID
-> app.put('/api/rooms/:id')
+> put('/api/listing/:id')
 
-## delete a record
-> app.delete('/api/rooms/:id')
+## delete a reservation
+> delete('/api/listing/:id/reservations/:id')
 
 ## Requirements
 
