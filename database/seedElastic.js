@@ -8,7 +8,7 @@ var inputListing = function () {
   var listing = seed.generateListing()
   for (let i = 0; i < listing.length; i++) {
     client.index({
-     "index" : 'rooms',
+     "index" : 'listing',
      "type" : '_doc',
      "id" : listing[i].id,
      "body" : {
@@ -30,7 +30,7 @@ var inputListing = function () {
           "endDate" : null,
           "blackDate" : null,
         },
-        "reservedDates" : reservationsListing(i)
+        "reservations" : reservationsListing(i)
       }
     }, function (err, resp, status) {
       console.log(status, 'Did it did it?'));
