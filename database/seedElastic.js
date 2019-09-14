@@ -11,6 +11,7 @@ var inputListing = function () {
      "index" : 'listing',
      "type" : '_doc',
      "id" : listing[i].id,
+     "refresh" : 'false',
      "body" : {
         "listing" : {
           "cost" : listing[i].perNight,
@@ -33,7 +34,8 @@ var inputListing = function () {
         "reservations" : reservationsListing(i)
       }
     }, function (err, resp, status) {
-      console.log(status, 'Did it did it?'));
+      // console.log(status, 'Did it did it?');
+      if (err) console.log(err)
     });
   }
 }

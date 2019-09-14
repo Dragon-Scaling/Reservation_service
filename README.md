@@ -26,11 +26,11 @@
 ## get a listings reservations by ID
 > get('/api/listing/:id/reservations')
 
-## update existing data by room ID
-> put('/api/listing/:id')
+## update existing reservation by ID
+> put('/api/listing/:id/reservation/:reserveId')
 
 ## delete a reservation
-> delete('/api/listing/:id/reservations/:id')
+> delete('/api/listing/:id/reservations/:reserveId')
 
 ## Requirements
 

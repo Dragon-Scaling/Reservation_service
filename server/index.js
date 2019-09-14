@@ -135,7 +135,7 @@ app.delete('/api/rooms/:id', (req, res) => {
 //
 // ORIGINAL ENDPOINTS
 //
-//get listing data according to the ID
+// get listing data according to the ID
 // app.get('/api/listingData/:id', (req, res) => {
 //   let id = req.params.id
 //   db.getListing(id, (result)=> {
