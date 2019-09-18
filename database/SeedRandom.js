@@ -14,7 +14,7 @@ var getRandomInt = (min, max) => {
 //generates an array of objects with keys
 module.exports.generateListing = function () {
   let listings = [];
-  for (let id = 1; id <= 10000000; id++) {
+  for (let id = 800001; id <= 1000000; id++) {
     let perNight = faker.random.number(150) + 50;
     let rating = getRandomInt(1 , 5)
     let ratingAmount = faker.random.number(3000);
