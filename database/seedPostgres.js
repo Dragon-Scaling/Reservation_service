@@ -29,7 +29,8 @@ const seed = require ('./SeedRandom.js')
 
   try {
     await client.query('BEGIN')
-    for (let i = 1; i < 10000000; i++) {
+    for (let i = 9000001; i < 10000000; i++) {
+      if ( i % 100000 === 0) console.log(i)
       const reserve = await seed.generateReservations(i)
       for (let j = 0; j < reserve.length; j++) {
         const secondQuery = `INSERT INTO reservations (startDate, endDate, numGuests, numInfants, listingID) VALUES ('${reserve[j].startDate.year}-${reserve[j].startDate.month}-${reserve[j].startDate.day}', '${reserve[j].endDate.year}-${reserve[j].endDate.month}-${reserve[j].endDate.day}', ${reserve[j].numGuests}, ${reserve[j].numInfants}, ${reserve[j].listingID})`;
