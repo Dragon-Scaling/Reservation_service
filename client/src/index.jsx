@@ -1,8 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './components/App.jsx'
+require('newrelic');
 
-const AppElement = document.getElementById('Reservations')
-ReactDOM.render(
-  <App/>
-, AppElement)
+
+ReactDOM.render(<App/>, document.getElementById('Reservations'));

@@ -1,3 +1,4 @@
+require('newrelic');
 const express = require ('express')
 const app = express()
 const port = 3002
@@ -6,7 +7,8 @@ const db = require('../database/index.js');
 const cors = require('cors')
 const { Client } = require('@elastic/elasticsearch')
 const client = new Client({ node: 'http://localhost:9200' })
-const pool = require('./configPostgres.js');
+const pool = require('../database/configPostgres.js');
+
 
 app.use(cors())
 app.use(express.static('public'))
@@ -17,6 +19,108 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 //write a create ID function to call in ID slot to enumerate all listings.
+
+
+///////////////////////////////////////////////////////////
+//
+// **           API ENDPOINTS FOR POSTGRES            **
+//
+///////////////////////////////////////////////////////////
+//
+// add a listing
+app.post('/api/listing/:id', (req, res) => {
+  let id = req.params.id
+  const { perNight, Rating, RatingAmount, guestsAllowed, guestsInfants, cleaningFee, serviceFee, occupancyFee, daysMinimum } = request.body
+
+  pool.query(`INSERT INTO lissting (ID, perNight, Rating, RatingAmount, guestsAllowed, guestsInfants, cleaningFee, serviceFee, occupancyFee, daysMinimum) VALUES (${id}, ${perNight}, ${rating}, ${ratingAmount}, ${guestsAllowed}, ${guestsInfants}, ${cleaningFee}, ${serviceFee}, ${occupancyFee}, ${daysMinimum})`, (error, results) => {
+    if (error) {
+      throw error
+    }
+    res.status(201).send(`Listing added with ID: ${results.ID}`)
+  })
+})
+//
+// add a reservation to an id
+app.post('/api/listing/:id/reservation', (req, res) => {
+  let id = req.params.id;
+  const { startDate, endDate, numGuests, numInfants, listingID } = req.body
+})
+//
+// get a listings by ID
+app.get('/api/listing/:id', (req, res) => {
+  let id = req.params.id
+  pool.query('SELECT * FROM listing WHERE id = $1', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    res.status(200).json(results.rows)
+  })
+})
+// get a listings reservations by ID
+app.get('/api/reservations/:id', (req, res) => {
+  let id = req.params.id
+  pool.query('SELECT * FROM reservations WHERE listingid = $1', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    res.status(200).json(results.rows)
+  })
+})
+// update existing reservation by ID
+app.put('/api/listing/:id/reservation/:reserveId', (req, res) => {
+    let id = req.params.id;
+    let reservation = req.params.reserveId;
+  const { numGuests, numInfants } = req.body
+
+  pool.query(
+    'UPDATE reservations SET numGuests = $1, numInfants = $2 WHERE ID = $3',
+    [numGuests, numInfants, reservation],
+    (error, results) => {
+      if (error) {
+        throw error
+      }
+      response.status(200).send(`Reservation modified with ID: ${reservation} from listing ${id}`)
+    }
+  )
+})
+// delete a reservation
+app.delete('/api/listing/:id/reservations/:reserveId', (req, res) => {
+  let id = req.params.id;
+  let reservation = req.params.reserveId;
+  pool.query('DELETE FROM reservations WHERE id = $1', [reservation], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).send(`Reservation deleted with ID: ${reservation}`)
+  })
+})
+
+
+
+///////////////////////////////////////////////////////////
+//
+// ORIGINAL ENDPOINTS
+//
+// get listing data according to the ID
+// app.get('/api/listingData/:id', (req, res) => {
+//   let id = req.params.id
+//   db.getListing(id, (result)=> {
+//     console.log(`sent back listing ${id} information!`)
+//     res.send(result[0])
+//   })
+// })
+//
+app.get('api/')
+//
+//get reservations data according to listing ID
+// app.get('/api/reservations/:listingid', (req, res) => {
+//   let listingid = req.params.listingid
+//   db.getReservations(listingid, (result) => {
+//     console.log( `sent back all reservations for ${listingid}`)
+//     res.send(result)
+//   })
+// })
+
 /////////////////////////////////////////////////////////////
 //
 // This Below Section Is For ElasticSearch
@@ -128,103 +232,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 //
 ////////////////////////////////////////////////////////////
 
-
-
-///////////////////////////////////////////////////////////
-//
-// **           API ENDPOINTS FOR POSTGRES            **
-//
-///////////////////////////////////////////////////////////
-//
-// add a listing
-app.post('/api/listing/:id', (req, res) => {
-  let id = req.params.id
-  const { perNight, Rating, RatingAmount, guestsAllowed, guestsInfants, cleaningFee, serviceFee, occupancyFee, daysMinimum } = request.body
-
-  pool.query(`INSERT INTO lissting (ID, perNight, Rating, RatingAmount, guestsAllowed, guestsInfants, cleaningFee, serviceFee, occupancyFee, daysMinimum) VALUES (${id}, ${perNight}, ${rating}, ${ratingAmount}, ${guestsAllowed}, ${guestsInfants}, ${cleaningFee}, ${serviceFee}, ${occupancyFee}, ${daysMinimum})`, (error, results) => {
-    if (error) {
-      throw error
-    }
-    res.status(201).send(`Listing added with ID: ${results.ID}`)
-  })
-})
-//
-// get a listings by ID
-app.get('/api/listing/:id', (req, res) => {
-  let id = req.params.id
-  pool.query('SELECT * FROM listing WHERE id = $1', [id], (error, results) => {
-    if (error) {
-      throw error
-    }
-    res.status(200).json(results.rows)
-  })
-}
-// get a listings reservations by ID
-get('/api/listing/:id/reservations')
-app.get('/api/listing/:id', (req, res) => {
-  let id = req.params.id
-  pool.query('SELECT * FROM listing WHERE id = $1', [id], (error, results) => {
-    if (error) {
-      throw error
-    }
-    res.status(200).json(results.rows)
-  })
-}
-// update existing reservation by ID
-app.put('/api/listing/:id/reservation/:reserveId', (req, res) => {
-    let id = req.params.id;
-    let reservation = req.params.reserveId;
-})
-  const { numGuests, numInfants } = request.body
-
-  pool.query(
-    'UPDATE reservations SET numGuests = $1, numInfants = $2 WHERE ID = $3',
-    [numGuests, numInfants, reservation],
-    (error, results) => {
-      if (error) {
-        throw error
-      }
-      response.status(200).send(`Reservation modified with ID: ${reservation} from listing ${id}`)
-    }
-  )
-}
-// delete a reservation
-app.delete('/api/listing/:id/reservations/:reserveId', (req, res) => {
-  let id = req.params.id;
-  let reservation = req.params.reserveId;
-  pool.query('DELETE FROM reservations WHERE id = $1', [reservation], (error, results) => {
-    if (error) {
-      throw error
-    }
-    response.status(200).send(`Reservation deleted with ID: ${reservation}`)
-  })
-}
-
-
-
-///////////////////////////////////////////////////////////
-//
-// ORIGINAL ENDPOINTS
-//
-// get listing data according to the ID
-// app.get('/api/listingData/:id', (req, res) => {
-//   let id = req.params.id
-//   db.getListing(id, (result)=> {
-//     console.log(`sent back listing ${id} information!`)
-//     res.send(result[0])
-//   })
-// })
-//
-app.get('api/')
-//
-//get reservations data according to listing ID
-// app.get('/api/reservations/:listingid', (req, res) => {
-//   let listingid = req.params.listingid
-//   db.getReservations(listingid, (result) => {
-//     console.log( `sent back all reservations for ${listingid}`)
-//     res.send(result)
-//   })
-// })
 
 //start up the listening on the port
   app.listen(port, ()=> console.log(`Reservations module listening on port ${port}`))
